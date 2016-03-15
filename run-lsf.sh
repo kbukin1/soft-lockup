@@ -4,16 +4,25 @@ export QSUB_DEFAULT_OS=rel6
 
 SUFFIX=$1
 
-QUEUE_NAME=o_cpu_4G_1H
-LOCKUP=/home/kbukin/soft_lockup/lockup.pl
-DIR_TREES_BASE=/home/scratch.mantolini_inf_1/konstantin/soft_lockup
-DIR_LIST_BASE=/home/kbukin/soft_lockup
+if [[ -z "${SUFFIX// }" ]]; then
+  echo "Error: missing suffix"
+  exit 1
+fi
+
+QUEUE_NAME=o_cpu_.4G_15M
+LOCKUP=/home/kbukin/soft-lockup/lockup.pl
+DIR_TREES_BASE=/home/scratch.mantolini_inf_1/konstantin/soft-lockup
+DIR_LIST_BASE=/home/kbukin/soft-lockup
+SLEEP_TIME=120
+
+mkdir -p $DIR_TREES_BASE
+mkdir -p $DIR_LIST_BASE
 
 COUNTER=0
 while [  $COUNTER -lt 1000 ]; do
-  echo "****************"
-  echo Counter=$COUNTER
-  echo "****************"
+  echo "********************"
+  echo "* Counter=$COUNTER "
+  echo "********************"
 
   DIR_TREES="$DIR_TREES_BASE/dirs-$SUFFIX-$COUNTER"
   DIR_LIST="$DIR_LIST_BASE/stat-$SUFFIX-$COUNTER.txt"
@@ -27,7 +36,10 @@ while [  $COUNTER -lt 1000 ]; do
 
   qsub -P kepler -q $QUEUE_NAME -w "ended($JOB_STAT_ID)" /bin/rm -rf $DIR_TREES $DIR_LIST
 
-  sleep 120
+  echo "************************"
+  echo "* Sleeping $SLEEP_TIME "
+  echo "************************"
+  sleep $SLEEP_TIME
   let COUNTER=COUNTER+1 
 done
 
