@@ -22,7 +22,8 @@ sub gen_dirs {
   $log->info("generating tree in '$dir'...\n");
 
   my $max_dir_name = 64;
-  my $max_dirs     = 10000;
+  #my $max_dirs     = 10000;
+  my $max_dirs     = 10;
 
   mkdir $dir;
   my $pattern = new String::Random;
@@ -36,7 +37,8 @@ sub gen_dirs {
     my $dir_name = $pattern->randpattern('A' x $dir_length);
     next if $dir_name eq "";
 
-    $dirh{$dir_name} = 1;
+    my $temp = int(rand(5));
+    $dirh{$dir_name} = 1 if $temp == 0;
   }
 
   open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
@@ -77,10 +79,10 @@ sub stat_dirs {
     #$log->info("$dir\n");
   }
 
-  $log->info("stated $cnt dirs\n");
+  $log->info("stated $cnt dirs.\n");
   close $fh;
 
-  return 0;
+  return $cnt == 0;
 }
 
 
