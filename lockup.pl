@@ -50,6 +50,8 @@ sub gen_dirs {
 
   $log->info("tree in '$dir' is generated\n");
   close $fh;
+
+  return 0;
 }
 
 sub stat_dirs {
@@ -77,6 +79,8 @@ sub stat_dirs {
 
   $log->info("stated $cnt dirs\n");
   close $fh;
+
+  return 0;
 }
 
 
@@ -86,12 +90,9 @@ sub main
 
   die "Error: no -stat_file specified\n" if !$stat_file;
 
-  if ($gen_tree) {
-    gen_dirs($gen_tree, $stat_file)
-  } else {
-    stat_dirs($stat_file)
-  }
+  my $ret = $gen_tree ? gen_dirs($gen_tree, $stat_file) : stat_dirs($stat_file);
 
+  exit($ret);
 }
 
 main();
