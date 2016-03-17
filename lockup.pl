@@ -22,8 +22,7 @@ sub gen_dirs {
   $log->info("generating tree in '$dir'...\n");
 
   my $max_dir_name = 64;
-  #my $max_dirs     = 10000;
-  my $max_dirs     = 10;
+  my $max_dirs     = 10000;
 
   mkdir $dir;
   my $pattern = new String::Random;
@@ -38,15 +37,18 @@ sub gen_dirs {
     next if $dir_name eq "";
 
     my $temp = int(rand(5));
-    $dirh{$dir_name} = 1 if $temp == 0;
+    $dirh{$dir_name} = 1;
   }
 
   open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
   foreach my $d (keys %dirh) {
     my $full_dir_name = "$dir/$d";
 
-    mkdir $full_dir_name;
     print $fh "$full_dir_name\n";
+
+    my $temp = int(rand(5));
+    mkdir $full_dir_name if $temp == 0;
+
     #$log->info("generated [$dir_name]...\n");
   }
 
